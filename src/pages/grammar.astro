@@ -8,17 +8,22 @@ import { svoDemo, inversion, exercises } from '../data/grammar';
 
   <section class="mt-6">
     <h2 class="text-xl font-bold">SVO 句型積木</h2>
-    <p class="text-sm text-slate-600">時間詞 + 主詞 + 動詞 + 受詞，和中文語序相同。</p>
-    <div class="mt-3 flex flex-wrap gap-3">
-      {svoDemo.map((x) => (
-        <div class="card text-center">
-          <div class="text-xs text-teal-600">{x.role}</div>
-          <div class="text-xl font-bold"><Z w={x.ms} z={x.zy} /></div>
-          <div class="text-sm">{x.zh}</div>
+    <p class="text-sm text-slate-600">和中文語序相同，三種旅遊常用結構。</p>
+    {svoDemo.map((g) => (
+      <div class="mt-4">
+        <div class="text-sm font-bold text-teal-700">{g.title}</div>
+        <div class="mt-2 flex flex-wrap gap-3">
+          {g.blocks.map((x) => (
+            <div class="card text-center">
+              <div class="text-xs text-teal-600">{x.role}</div>
+              <div class="text-xl font-bold"><Z w={x.ms} z={x.zy} /></div>
+              <div class="text-sm">{x.zh}</div>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-    <p class="mt-2 text-slate-600">Esok saya makan nasi. → 明天我吃飯。</p>
+        <p class="mt-2 text-slate-600">{g.sentence} → {g.zh}</p>
+      </div>
+    ))}
   </section>
 
   <section class="mt-10">
@@ -45,6 +50,7 @@ import { svoDemo, inversion, exercises } from '../data/grammar';
       <div class="mt-3 flex gap-2">
         <button id="q-reset" type="button" class="tile text-sm">重來</button>
         <button id="q-next" type="button" class="tile hidden text-sm">下一題 →</button>
+        <button id="q-restart" type="button" class="tile hidden text-sm">再練一次</button>
       </div>
       <p id="q-fb" class="mt-3 font-bold" aria-live="polite"></p>
     </div>
@@ -64,6 +70,7 @@ import { svoDemo, inversion, exercises } from '../data/grammar';
       $('q-zh').textContent = q.zh;
       $('q-fb').textContent = '';
       $('q-next').classList.add('hidden');
+      $('q-restart').classList.add('hidden');
       picked = [];
       const pool = [...q.answer, ...q.extra].sort(() => Math.random() - 0.5);
       $('q-pool').replaceChildren(...pool.map((w) => {
@@ -95,7 +102,10 @@ import { svoDemo, inversion, exercises } from '../data/grammar';
         fb.className = 'mt-3 font-bold text-green-600';
         (window as any).speakMalay?.(q.answer.join(' '));
         if (idx < data.length - 1) $('q-next').classList.remove('hidden');
-        else fb.textContent += ' 🎉 全部完成！';
+        else {
+          fb.textContent = `🎉 太棒了！你已通關 ${data.length} 道旅遊積木造句題！`;
+          $('q-restart').classList.remove('hidden');
+        }
       } else {
         fb.textContent = '❌ 順序不對，按「重來」再試一次。提示：名詞在前、形容詞在後。';
         fb.className = 'mt-3 font-bold text-red-600';
@@ -104,6 +114,7 @@ import { svoDemo, inversion, exercises } from '../data/grammar';
 
     $('q-reset').addEventListener('click', render);
     $('q-next').addEventListener('click', () => { idx++; render(); });
+    $('q-restart').addEventListener('click', () => { idx = 0; render(); });
     render();
   </script>
 </Base>

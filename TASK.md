@@ -1,11 +1,23 @@
-# TASK: 擴充常用馬來文字句為「全方位旅遊生存通」（120+ 條）並自動部署
+# TASK: 第三關與第四關全面聯動旅遊字句庫（積木造句擴充至12題，實戰會話擴充至6大場景）
 
 ## 目標
-在 `/home/wuminchin/文件/my-malay-learning-site` 專案中，將第二關的常用單字與短句大幅擴充至 **120 條以上**，全面覆蓋自由行觀光客在馬來西亞一般旅遊的所有高頻場景（交通搭車、飯店住宿、餐廳點餐、夜市逛街殺價、緊急求助就醫、景點問路、數字時間結帳），所有字句均配齊精準的純注音符號（ㄅㄆㄇㄈ）、繁體中文說明與情境提示，並完成建置與 push 至 GitHub Pages。
+在 `/home/wuminchin/文件/my-malay-learning-site` 專案中，將第二關的 147 條旅遊必備字句深度整合到第三關（積木句型與倒裝挑戰）與第四關（實戰情境會話館），包含：
+1. **第三關 (`src/data/grammar.ts` & `src/pages/grammar.astro`)**：
+   - SVO 句型積木擴增為 3 大旅遊典型結構展示（時間詞、想做/助動詞、請求動詞）。
+   - 倒裝練習擴增至 8 個實用旅遊名詞＋形容詞組合（如冰茶、熱咖啡、炒飯、大房間、便宜的票等）。
+   - 互動組句測驗題目由 5 題大幅擴充至 **12 題**旅遊實戰題，完成 12 題後顯示通關祝賀與重測按鈕。
+2. **第四關 (`src/data/dialogues.ts` & `src/pages/dialogues.astro`)**：
+   - 實戰情境對話由 3 個擴增至 **6 大大馬自由行核心情境**（Mamak檔點餐、叫Grab/搭車、飯店Check-in與行李、夜市殺價與行動支付、捷運站/機場買票問路、藥局與緊急求助）。
+   - 每句皆配有逐字純注音符號（ㄅㄆㄇㄈ）、繁體中文翻譯與單句點擊發音。
+   - 頁面頂部新增「情境快速錨點導覽按鈕」，方便一鍵跳轉到不同情境。
+3. **首頁更新 (`src/pages/index.astro`)**：更新第 3 關與第 4 關的卡片描述。
+4. **驗證與發布**：執行 `npm test`（`astro build`）確保零錯誤通過，並 push 至 GitHub Pages。
 
 ## 可改檔案
-- `src/data/vocab.ts`
-- `src/pages/vocab.astro`
+- `src/data/grammar.ts`
+- `src/pages/grammar.astro`
+- `src/data/dialogues.ts`
+- `src/pages/dialogues.astro`
 - `src/pages/index.astro`
 - `README.md`
 - `TASK.md`
@@ -15,82 +27,81 @@
 
 ## 詳細規格與實作要求
 
-### 1. 分類架構與詞彙庫擴充 (`src/data/vocab.ts`)
-請將分類重新梳理為 6 大旅遊核心主題（確保分類名稱簡潔明確、介面好點選）：
-`export type Cat = '日常問候與禮貌' | '交通出行與問路' | '飯店住宿與服務' | '美食點餐與夜市' | '逛街購物與結帳' | '緊急求助與就醫' | '時間數字與常用';`
+### 1. 第三關資料擴充 (`src/data/grammar.ts`)
+- **`svoDemo` 旅遊三合一積木展示**：
+  提供 3 組不同結構的積木展示陣列（或包含三組結構），例如：
+  1. `[時間詞 Esok] + [主詞 saya] + [動詞 beli] + [受詞 tiket]`（明天我買票）
+  2. `[主詞 Saya] + [助動詞 nak] + [動詞 minum] + [受詞 air]`（我想喝水）
+  3. `[請求詞 Tolong] + [動詞 bawa] + [受詞 saya] + [地點 ke hotel]`（請帶我去飯店）
+- **`inversion` 旅遊倒裝（名詞在前、修飾在後，8 組）**：
+  - `teh ais`（冰茶）
+  - `kopi panas`（熱咖啡）
+  - `nasi goreng`（炒飯）
+  - `ayam goreng`（炸雞）
+  - `bilik besar`（大房間）
+  - `air kosong`（白開水）
+  - `pasar malam`（夜市）
+  - `tiket murah`（便宜的票）
+  每項均包含對應的純注音符號陣列與記憶說明。
+- **`exercises` 互動組句練習（擴充至 12 題）**：
+  涵蓋倒裝片語與 SVO 實用短句：
+  1. 冰茶：answer: `['teh', 'ais']`, extra: `['kopi']`
+  2. 熱咖啡：answer: `['kopi', 'panas']`, extra: `['sejuk']`
+  3. 炒飯：answer: `['nasi', 'goreng']`, extra: `['mee']`
+  4. 大房間：answer: `['bilik', 'besar']`, extra: `['kecil']`
+  5. 便宜的票：answer: `['tiket', 'murah']`, extra: `['mahal']`
+  6. 我想喝水。：answer: `['Saya', 'nak', 'minum', 'air']`, extra: `['makan']`
+  7. 明天我買票。：answer: `['Esok', 'saya', 'beli', 'tiket']`, extra: `['hari']`
+  8. 請在這裡停。：answer: `['Tolong', 'berhenti', 'di', 'sini']`, extra: `['sana']`
+  9. 洗手間在哪裡？：answer: `['Di', 'mana', 'tandas']`, extra: `['bilik']`
+  10. 這個多少錢？：answer: `['Berapa', 'harga', 'ini']`, extra: `['itu']`
+  11. 這間房間很大。：answer: `['Bilik', 'ini', 'sangat', 'besar']`, extra: `['kecil']`
+  12. 可以便宜一點嗎？：answer: `['Boleh', 'murah', 'sikit']`, extra: `['mahal']`
 
-請擴充至 **120~135 條** 旅遊高頻字句，涵蓋以下場景：
+### 2. 第三關頁面體驗優化 (`src/pages/grammar.astro`)
+- 在練習題區塊支援 12 題連續作答，並在第 12 題答對後顯示慶祝標籤（如「🎉 太棒了！你已通關 12 道旅遊積木造句題！」）與「再練一次」按鈕。
+- 保持原有的點擊積木加入、點擊已選積木退回、以及答案判斷邏輯。
 
-#### (1) 日常問候與禮貌（約 12 條）
-- Selamat pagi（早安）、Selamat tengah hari（午安）、Selamat petang（傍晚好）、Selamat malam（晚安）
-- Apa khabar?（你好嗎？）、Khabar baik（很好）、Terima kasih（謝謝）、Sama-sama（不客氣）、Maaf（不好意思/抱歉）、Tolong（請/幫忙）、Selamat jalan（慢走/一路順風）、Jumpa lagi（下次見）
+### 3. 第四關實戰情境會話擴充 (`src/data/dialogues.ts`)
+擴充為 6 大旅遊真實對話情境，每個情境至少 5~7 句來回：
+1. **情境 1：Mamak 檔 & 熟食中心點餐 (`mamak`)**
+   - 角色：服務生 / 你
+   - 內容：詢問吃什麼、點印度煎餅（Roti canai satu）、飲料點拉茶少糖（Teh tarik kurang manis）、內用還外帶（Makan sini）、結帳買單（Kira bil）。
+2. **情境 2：搭車叫車與問路 Grab/Teksi (`transport`)**
+   - 角色：司機 / 你
+   - 內容：要去哪裡（Pergi ke mana?）、請載我到飯店（Tolong hantar saya ke hotel）、請開後車廂放行李（Tolong buka bonet/bagasi）、在這裡停（Berhenti di sini）、車資多少（Berapa tambang?）。
+3. **情境 3：飯店入住 Check-in 與櫃檯服務 (`hotel`)**
+   - 角色：櫃檯人員 / 你
+   - 內容：我想辦理入住（Saya nak daftar masuk）、這是我的護照（Ini pasport saya）、房號 302（Nombor bilik 302）、有免費 Wi-Fi 嗎（Ada Wi-Fi percuma?）、Wi-Fi 密碼是什麼（Apa kata laluan?）、可以寄放行李嗎（Boleh simpan bagasi?）。
+4. **情境 4：夜市採買與殺價付款 (`market`)**
+   - 角色：老闆 / 你
+   - 內容：這個多少錢（Berapa harga ini?）、十令吉（Sepuluh ringgit）、太貴了，可以便宜一點嗎（Mahal sangat, boleh murah sikit?）、八令吉賣你（Boleh, lapan ringgit）、可以用 Touch 'n Go 或刷卡嗎（Boleh guna Touch 'n Go?）。
+5. **情境 5：捷運站 / 機場問路買票 (`transit`)**
+   - 角色：站務人員 / 你
+   - 內容：不好意思，捷運站在哪裡（Maaf, di mana stesen LRT?）、一直往前走（Lurus di depan）、我要買一張去中央車站的票（Saya nak beli satu tiket ke KL Sentral）、出口在哪裡（Di mana pintu keluar?）。
+6. **情境 6：藥局就醫與緊急求助 (`emergency`)**
+   - 角色：藥劑師 / 你
+   - 內容：請幫幫我，我肚子痛而且發燒（Tolong saya, saya sakit perut dan demam）、有發燒藥嗎（Ada ubat demam?）、這盒藥一天吃兩次（Makan ubat ini dua kali sehari）、如果很嚴重附近有診所（Ada klinik dekat sini）。
 
-#### (2) 交通出行與問路（約 20 條）
-- Lapangan terbang（機場）、Stesen（車站）、Stesen LRT / MRT（捷運站/輕快鐵站）、Bas（公車）、Teksi（計程車）、Grab（叫車App）
-- Tiket（車票/門票）、Beli tiket（買票）、Satu tiket ke...（一張去...的票）
-- Pergi ke mana?（去哪裡？）、Tolong bawa saya ke...（請載我到...）、Berhenti di sini（在這裡停/靠邊停）
-- Di mana...?（...在哪裡？）、Di mana stesen bas?（公車站牌在哪？）
-- Kiri（左）、Kanan（右）、Lurus（直走）、Depan（前面）、Belakang（後面）、Dekat（近）、Jauh（遠）
-- Masuk（入口/進）、Keluar（出口/出）
+每句必須由 `[馬來文單字, 注音]` 配對組裝（例如 `[['Saya', 'ㄙㄚ ㄧㄚ'], ['nak', 'ㄋㄚㄎ']]`），嚴格確保注音在 `<Sentence />` 中正確渲染。
 
-#### (3) 飯店住宿與服務（約 15 條）
-- Hotel（飯店）、Bilik（房間）、Nombor bilik（房號）、Kunci（鑰匙）、Kad kunci（房卡）
-- Daftar masuk（辦理入住 Check-in）、Daftar keluar（退房 Check-out）
-- Kata laluan Wi-Fi（Wi-Fi 密碼）、Boleh bagi kata laluan Wi-Fi?（能給我 Wi-Fi 密碼嗎？）
-- Tuala（毛巾）、Air panas（熱水）、Penghawa dingin / Air-con（冷氣）、Selimut（被子）
-- Boleh simpan bagasi?（可以寄放行李嗎？）、Tolong panggil teksi（請幫我叫計程車）
+### 4. 第四關頁面優化 (`src/pages/dialogues.astro`)
+- 頂部加入 6 個情境快速切換按鈕（Pill Buttons：🍽️ Mamak點餐、🚗 叫車問路、🏨 飯店入住、🛍️ 夜市殺價、🚇 捷運買票、💊 藥局求助），點擊平滑滾動到該情境。
+- 維持單句點擊發音功能。
 
-#### (4) 美食點餐與夜市（約 24 條）
-- Menu（菜單）、Pesan / Order（點餐）、Makan（吃）、Minum（喝）、Sedap（好吃/美味）
-- Saya nak...（我要...）、Nak makan apa?（想吃什麼？）
-- Makan sini（內用）、Bungkus（打包/外帶）
-- Air（水）、Air kosong / Air suam（白開水/溫水）、Ais（加冰）、Panas（熱的）
-- Kurang manis（少糖/微甜）、Tak nak gula（無糖）
-- Pedas（辣）、Tak nak pedas / Jangan pedas（不要辣）、Sedikit pedas（微辣）
-- Ayam（雞肉）、Daging lembu（牛肉）、Ikan（魚）、Udang（蝦）、Sayur（蔬菜）、Telur（蛋）
-- Nasi lemak（椰漿飯）、Roti canai（印度甩餅）、Teh tarik（拉茶）、Mee goreng（炒麵）
-- Kira / Bil（買單/結帳）
+### 5. 首頁同步更新 (`src/pages/index.astro`)
+- 第三關描述更新為：「12 道旅遊積木組句挑戰，搞懂 SVO 與倒裝邏輯。」
+- 第四關描述更新為：「6 大自由行實戰會話（點餐、叫車、飯店、夜市、買票、求助）。」
 
-#### (5) 逛街購物與結帳（約 20 條）
-- Berapa harga ini? / Berapa?（這個多少錢？）
-- Mahal（太貴了）、Murah（便宜）、Boleh murah sikit?（能算便宜一點嗎？）
-- Ada diskaun?（有折扣嗎？）、Tengok-tengok saja（只是看看）
-- Saiz（尺寸）、Besar（大）、Kecil（小）
-- Boleh bayar guna kad?（可以刷卡嗎？）、Boleh guna Touch 'n Go?（可以用電子支付/TNG嗎？）
-- Wang tunai / Cash（現金）、Duit baki / Baki（找零）
-- Resit（收據/發票）、Beg plastik（塑膠袋）、Kedai（商店）、Pasar malam（夜市）
-
-#### (6) 緊急求助與就醫（約 15 條）
-- Tolong!（救命！/幫忙！）、Bahaya（危險）
-- Balai polis（警察局）、Polis（警察）、Hospital（醫院）、Klinik（診所）、Farmasi（藥局）
-- Sakit（痛/不舒服）、Sakit perut（肚子痛）、Sakit kepala（頭痛）、Demam（發燒）、Batuk（咳嗽）
-- Ubat（藥）、Doktor（醫生）
-- Saya hilang pasport（我護照掉了）、Saya sesat（我迷路了）、Boleh tolong saya?（能救/幫我嗎？）
-
-#### (7) 時間數字與常用（約 18 條）
-- Satu 到 Sepuluh（數字 1～10）
-- Sebelas（11）、Dua puluh（20）、Ratus（百，如 Seratus = 100）、Ribu（千，如 Seribu = 1000）
-- Hari ini（今天）、Esok（明天）、Semalam（昨天）、Sekarang（現在）
-- Pagi（早上）、Petang（下午/傍晚）、Malam（晚上）、Pukul berapa?（幾點了？）
-- Ya（是/好）、Tidak / Tak（不是/不要）
-
-### 2. 頁面優化 (`src/pages/vocab.astro`)
-- 頁面上方加入旅遊統計徽章（例如：「🛫 旅遊通模式：收錄 120+ 條大馬自由行必備字句」）。
-- 確保分類按鈕包含「全部」以及上述 7 個分類，點擊篩選切換即時流暢。
-- 支援右上角的注音開關切換與點擊發音。
-
-### 3. 首頁更新 (`src/pages/index.astro`)
-- 將第二關卡片描述更新為：「精選 120+ 個自由行旅遊必備單字與實用短句（交通、飯店、點餐、殺價、緊急求助）。」
-
-### 4. 驗證與推送
+### 6. 驗證與推送
 - 執行 `npm test`（`astro build`），必須零錯誤建置完成。
-- 執行 `git add .`、`git commit -m "feat: expand travel vocab to 120+ entries covering all tourist scenarios"`。
-- 執行 `git push origin main` 將代碼推送至遠端倉庫。
+- 執行 `git add .`、`git commit -m "feat: link travel vocab with 12 grammar exercises and 6 dialogue scenes"`。
+- 執行 `git push origin main`。
 
 ## 完成條件
-1. `src/data/vocab.ts` 條目數達 120 條以上，且涵蓋上述 7 大旅遊分類。
-2. 每一條均有注音（zy）、馬來文（ms）、中文（zh）、分類（cat）、情境提示（note）。
-3. `npm test` 通過，無任何錯誤。
+1. `src/data/grammar.ts` 包含 12 道練習題與 8 組倒裝例句。
+2. `src/data/dialogues.ts` 包含 6 個完整情境對話，所有句子均有正確注音陣列。
+3. `npm test` 通過。
 4. 成功 push 到 GitHub `main` 分支。
 
 ## 驗證指令

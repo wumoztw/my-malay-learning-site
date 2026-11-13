@@ -6,8 +6,13 @@ import { scenes } from '../data/dialogues';
 <Base title="第四關：實戰情境會話館">
   <h1 class="text-3xl font-bold text-teal-800">第四關：實戰情境會話館</h1>
   <p class="mt-2 text-slate-600">每句可按 🔊 單句播放，單字上方為逐字注音。</p>
+  <nav class="sticky top-0 z-10 -mx-1 mt-4 flex flex-wrap gap-2 bg-white/90 p-2 backdrop-blur" aria-label="情境快速導覽">
+    {scenes.map((s) => (
+      <a href={`#${s.id}`} data-jump={s.id} class="tile text-sm">{s.nav}</a>
+    ))}
+  </nav>
   {scenes.map((s) => (
-    <section class="mt-8" id={s.id}>
+    <section class="mt-8 scroll-mt-16" id={s.id}>
       <h2 class="text-xl font-bold">{s.title}</h2>
       <div class="mt-3 space-y-3">
         {s.lines.map((l) => (
@@ -22,4 +27,12 @@ import { scenes } from '../data/dialogues';
       </div>
     </section>
   ))}
+  <script>
+    document.querySelectorAll<HTMLAnchorElement>('[data-jump]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById(a.dataset.jump!)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
 </Base>

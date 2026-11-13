@@ -9,6 +9,13 @@ const nav = [['alphabet','1 字母'],['vocab','2 常用字句'],['grammar','3 �
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="manifest" href={`${b}manifest.webmanifest`} />
+  <link rel="icon" type="image/svg+xml" href={`${b}icon.svg`} />
+  <link rel="apple-touch-icon" href={`${b}icon-192.png`} />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="馬來文速通" />
   <title>{title} | 台灣人學馬來文</title>
   <script is:inline>
     if (localStorage.getItem('zhuyin') === 'off') document.documentElement.classList.add('zy-off');
@@ -49,6 +56,31 @@ const nav = [['alphabet','1 字母'],['vocab','2 常用字句'],['grammar','3 �
         if (w) { w.classList.toggle('show'); window.speakMalay(w.dataset.say); }
       });
     })();
+  </script>
+  <div id="pwa-bar" class="fixed inset-x-0 bottom-3 z-20 flex flex-col items-center gap-2 px-4 pointer-events-none">
+    <div id="offline-note" hidden class="rounded-full bg-slate-800 px-4 py-2 text-sm text-white shadow">📶 目前為離線模式，全站內容仍可正常查閱</div>
+    <button id="install-btn" type="button" hidden class="pointer-events-auto rounded-full bg-teal-700 px-4 py-2 text-sm text-white shadow">📲 安裝到手機桌面</button>
+  </div>
+  <script is:inline define:vars={{ swUrl: `${b}sw.js`, scope: b }}>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register(swUrl, { scope: scope }).catch(function () {});
+      });
+    }
+    var deferred, ib = document.getElementById('install-btn'), on = document.getElementById('offline-note');
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault(); deferred = e; ib.hidden = false;
+    });
+    ib.addEventListener('click', function () {
+      if (!deferred) return;
+      deferred.prompt();
+      deferred.userChoice.then(function () { deferred = null; ib.hidden = true; });
+    });
+    window.addEventListener('appinstalled', function () { ib.hidden = true; });
+    function net() { on.hidden = navigator.onLine; }
+    window.addEventListener('offline', net);
+    window.addEventListener('online', net);
+    net();
   </script>
 </body>
 </html>

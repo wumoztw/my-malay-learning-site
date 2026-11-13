@@ -1,0 +1,16 @@
+{
+  "name": "馬來文速通 - 台灣人專用旅遊學習",
+  "short_name": "馬來文速通",
+  "description": "專為台灣人設計的馬來文旅遊學習平台，全站純注音符號輔助，無網路離線完全可用。",
+  "start_url": "/my-malay-learning-site/",
+  "scope": "/my-malay-learning-site/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f766e",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

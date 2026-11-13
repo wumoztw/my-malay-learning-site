@@ -6,3 +6,7 @@ Astro + Tailwind CSS 靜態學習網站，含全站注音切換、字母速通�
 - 建置：`npm run build`（輸出 `dist/`）
 - 部署：push 到 `main` 後由 GitHub Actions 發布至 https://wumoztw.github.io/my-malay-learning-site/
   （需於 repo Settings → Pages 將 Source 設為 GitHub Actions）
+
+## 離線 PWA
+
+支援 Add to Home Screen 與離線使用：`public/sw.js`（Stale-While-Revalidate，快取 `malay-learning-pwa-v1`）、`public/manifest.webmanifest`、`public/icon*.{svg,png}`。

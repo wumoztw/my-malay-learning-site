@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import Sentence from '../components/Sentence.astro';
+import { scenes } from '../data/dialogues';
+---
+<Base title="第四關：實戰情境會話館">
+  <h1 class="text-3xl font-bold text-teal-800">第四關：實戰情境會話館</h1>
+  <p class="mt-2 text-slate-600">每句可按 🔊 單句播放，單字上方為逐字注音。</p>
+  {scenes.map((s) => (
+    <section class="mt-8" id={s.id}>
+      <h2 class="text-xl font-bold">{s.title}</h2>
+      <div class="mt-3 space-y-3">
+        {s.lines.map((l) => (
+          <div class={`flex ${l.who === 'B' ? 'justify-end' : ''}`}>
+            <div class={`max-w-[90%] rounded-2xl px-4 py-2 shadow-sm ${l.who === 'B' ? 'bg-teal-100' : 'bg-white'}`}>
+              <div class="text-xs text-slate-500">{s.roles[l.who === 'A' ? 0 : 1]}</div>
+              <Sentence words={l.ms} />
+              <div class="text-sm text-slate-600">{l.zh}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>

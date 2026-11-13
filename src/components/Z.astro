@@ -1,0 +1,5 @@
+---
+// 單字 + 注音 (ruby)；點擊/輕觸播放發音
+const { w, z, say } = Astro.props;
+---
+<ruby class="w" data-say={say ?? w} tabindex="0">{w}<rp>(</rp><rt class="zhuyin">{z}</rt><rp>)</rp></ruby>

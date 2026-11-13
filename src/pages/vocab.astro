@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import Z from '../components/Z.astro';
+import { vocab, cats } from '../data/vocab';
+---
+<Base title="第二關：同源詞認親館">
+  <h1 class="text-3xl font-bold text-teal-800">第二關：台語／生活同源詞認親館</h1>
+  <p class="mt-2 text-slate-600">共 {vocab.length} 個單字。點卡片翻面看「台灣人秒懂」解說。</p>
+  <div id="filters" class="mt-4 flex flex-wrap gap-2">
+    {['全部', ...cats].map((c) => <button type="button" data-cat={c} class="tile text-sm">{c}</button>)}
+  </div>
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {vocab.map((v) => (
+      <div class="flip" data-cat={v.cat} role="button" tabindex="0" aria-label={`翻牌 ${v.ms}`}>
+        <div class="flip-inner">
+          <div class="face card flex flex-col items-center justify-center text-center">
+            <span class="text-xs text-teal-600">{v.cat}</span>
+            <span class="mt-2 text-3xl font-bold"><Z w={v.ms} z={v.zy} /></span>
+            <span class="mt-2 text-lg">{v.zh}</span>
+            <button type="button" class="speak mt-3 rounded-full bg-teal-600 px-3 py-1 text-sm text-white" data-say={v.ms}>🔊 發音</button>
+            <span class="mt-2 text-xs text-slate-400">點擊翻面</span>
+          </div>
+          <div class="face back card bg-teal-50">
+            <h3 class="font-bold">{v.ms} = {v.zh}</h3>
+            <p class="mt-2 text-sm">🇹🇼 台灣人秒懂：{v.note}</p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+  <script>
+    const cards = document.querySelectorAll<HTMLElement>('.flip');
+    cards.forEach((c) => {
+      const toggle = () => c.classList.toggle('on');
+      c.addEventListener('click', (e) => { if (!(e.target as HTMLElement).closest('.speak')) toggle(); });
+      c.addEventListener('keydown', (e) => { if (e.key === 'Enter') toggle(); });
+    });
+    document.querySelectorAll<HTMLElement>('#filters button').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const cat = btn.dataset.cat;
+        cards.forEach((c) => (c.style.display = cat === '全部' || c.dataset.cat === cat ? '' : 'none'));
+      }),
+    );
+  </script>
+</Base>

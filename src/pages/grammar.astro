@@ -1,0 +1,109 @@
+---
+import Base from '../layouts/Base.astro';
+import Z from '../components/Z.astro';
+import { svoDemo, inversion, exercises } from '../data/grammar';
+---
+<Base title="第三關：積木句型與倒裝挑戰">
+  <h1 class="text-3xl font-bold text-teal-800">第三關：積木句型與倒裝挑戰</h1>
+
+  <section class="mt-6">
+    <h2 class="text-xl font-bold">SVO 句型積木</h2>
+    <p class="text-sm text-slate-600">時間詞 + 主詞 + 動詞 + 受詞，和中文語序相同。</p>
+    <div class="mt-3 flex flex-wrap gap-3">
+      {svoDemo.map((x) => (
+        <div class="card text-center">
+          <div class="text-xs text-teal-600">{x.role}</div>
+          <div class="text-xl font-bold"><Z w={x.ms} z={x.zy} /></div>
+          <div class="text-sm">{x.zh}</div>
+        </div>
+      ))}
+    </div>
+    <p class="mt-2 text-slate-600">Esok saya makan nasi. → 明天我吃飯。</p>
+  </section>
+
+  <section class="mt-10">
+    <h2 class="text-xl font-bold">倒裝練習：名詞在前、形容詞在後</h2>
+    <div class="mt-3 grid gap-3 sm:grid-cols-2">
+      {inversion.map((x) => (
+        <div class="card">
+          <div>{x.zh} →
+            {x.ms.map(([w, z]) => <><Z w={w} z={z} />{' '}</>)}
+          </div>
+          <div class="text-sm text-slate-500">{x.note}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="mt-10">
+    <h2 class="text-xl font-bold">互動練習：點擊積木組句</h2>
+    <div id="quiz" class="card mt-3" data-ex={JSON.stringify(exercises)}>
+      <p class="text-sm text-slate-500">第 <span id="q-no">1</span> / {exercises.length} 題</p>
+      <p id="q-zh" class="mt-1 text-lg font-bold"></p>
+      <div id="q-ans" class="mt-3 flex min-h-12 flex-wrap gap-2 rounded-lg border-2 border-dashed border-slate-300 p-2"></div>
+      <div id="q-pool" class="mt-3 flex flex-wrap gap-2"></div>
+      <div class="mt-3 flex gap-2">
+        <button id="q-reset" type="button" class="tile text-sm">重來</button>
+        <button id="q-next" type="button" class="tile hidden text-sm">下一題 →</button>
+      </div>
+      <p id="q-fb" class="mt-3 font-bold" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <script>
+    const root = document.getElementById('quiz')!;
+    const data: { zh: string; answer: string[]; extra: string[] }[] = JSON.parse(root.dataset.ex!);
+    const $ = (id: string) => document.getElementById(id)!;
+    let idx = 0;
+    let picked: string[] = [];
+    const norm = (s: string) => s.toLowerCase();
+
+    function render() {
+      const q = data[idx];
+      $('q-no').textContent = String(idx + 1);
+      $('q-zh').textContent = q.zh;
+      $('q-fb').textContent = '';
+      $('q-next').classList.add('hidden');
+      picked = [];
+      const pool = [...q.answer, ...q.extra].sort(() => Math.random() - 0.5);
+      $('q-pool').replaceChildren(...pool.map((w) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'tile'; b.textContent = w;
+        b.addEventListener('click', () => pick(w, b));
+        return b;
+      }));
+      $('q-ans').replaceChildren();
+    }
+
+    function pick(w: string, b: HTMLButtonElement) {
+      const q = data[idx];
+      if (picked.length >= q.answer.length) return;
+      b.disabled = true;
+      picked.push(w);
+      const chip = document.createElement('span');
+      chip.className = 'tile'; chip.textContent = w;
+      $('q-ans').append(chip);
+      if (picked.length === q.answer.length) check();
+    }
+
+    function check() {
+      const q = data[idx];
+      const ok = picked.every((w, i) => norm(w) === norm(q.answer[i]));
+      const fb = $('q-fb');
+      if (ok) {
+        fb.textContent = '✅ 正確！' + q.answer.join(' ');
+        fb.className = 'mt-3 font-bold text-green-600';
+        (window as any).speakMalay?.(q.answer.join(' '));
+        if (idx < data.length - 1) $('q-next').classList.remove('hidden');
+        else fb.textContent += ' 🎉 全部完成！';
+      } else {
+        fb.textContent = '❌ 順序不對，按「重來」再試一次。提示：名詞在前、形容詞在後。';
+        fb.className = 'mt-3 font-bold text-red-600';
+      }
+    }
+
+    $('q-reset').addEventListener('click', render);
+    $('q-next').addEventListener('click', () => { idx++; render(); });
+    render();
+  </script>
+</Base>

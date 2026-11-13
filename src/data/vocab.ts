@@ -1,0 +1,40 @@
+export type Cat = '食物料理' | '日常生活' | '商業社會';
+export interface Vocab { ms: string; zy: string; zh: string; cat: Cat; note: string }
+
+export const cats: Cat[] = ['食物料理', '日常生活', '商業社會'];
+
+export const vocab: Vocab[] = [
+  { ms: 'mee', zy: 'ㄇㄧ', zh: '麵', cat: '食物料理', note: '閩南語「麵 mī」直接借入，mee goreng 就是炒麵。' },
+  { ms: 'bihun', zy: 'ㄅㄧ ㄏㄨㄣ', zh: '米粉', cat: '食物料理', note: '閩南語「米粉 bí-hún」，台灣人念出來就對了。' },
+  { ms: 'tauhu', zy: 'ㄉㄠ ㄏㄨ', zh: '豆腐', cat: '食物料理', note: '閩南語「豆腐 tāu-hū」，tauhu goreng 是炸豆腐。' },
+  { ms: 'taugeh', zy: 'ㄉㄠ ㄍㄜ', zh: '豆芽', cat: '食物料理', note: '閩南語「豆芽 tāu-gê」，海南雞飯旁邊常見的配菜。' },
+  { ms: 'kuih', zy: 'ㄎㄨㄟ', zh: '糕點', cat: '食物料理', note: '閩南語「粿 kué」，馬來糕點通稱 kuih，和台灣的紅龜粿同源。' },
+  { ms: 'kicap', zy: 'ㄎㄧ ㄐㄚㄆ', zh: '醬油', cat: '食物料理', note: '來自閩南語「鮭汁 kê-chiap」，後來連英文 ketchup 都借它。' },
+  { ms: 'teh', zy: 'ㄉㄝ', zh: '茶', cat: '食物料理', note: '閩南語「茶 tê」，teh tarik 是拉茶、teh ais 是冰茶。' },
+  { ms: 'kopi', zy: 'ㄎㄛ ㄅㄧ', zh: '咖啡', cat: '食物料理', note: '與台語「咖啡 ka-pi」幾乎一樣，kopi O 是黑咖啡。' },
+  { ms: 'cawan', zy: 'ㄐㄚ ㄨㄢ', zh: '杯子／茶碗', cat: '日常生活', note: '來自閩南語「茶碗 tê-oán」，一樣是盛茶的器皿。' },
+  { ms: 'tokei', zy: 'ㄉㄛ ㄎㄟ', zh: '鐘錶', cat: '日常生活', note: '來自日語「時計 tokei」，台語也說「時計 sî-kè」。' },
+  { ms: 'loteng', zy: 'ㄌㄛ ㄉㄥ', zh: '樓上／閣樓', cat: '日常生活', note: '閩南語「樓頂 lâu-téng」，意思是樓上。' },
+  { ms: 'beca', zy: 'ㄅㄜ ㄐㄚ', zh: '三輪車', cat: '日常生活', note: '閩南語「馬車 bé-chhia」，指三輪車。' },
+  { ms: 'bas', zy: 'ㄅㄚ ㄙ', zh: '公車', cat: '日常生活', note: '英文 bus，台灣人說「巴士」，一聽就懂。' },
+  { ms: 'teksi', zy: 'ㄉㄜ ㄎ ㄒㄧ', zh: '計程車', cat: '日常生活', note: '英文 taxi，台灣說「計程車」，也常聽到 taxi。' },
+  { ms: 'lori', zy: 'ㄌㄛ ㄌㄧ', zh: '卡車', cat: '日常生活', note: '英文 lorry，和台灣的「羅里」說法相近。' },
+  { ms: 'televisyen', zy: 'ㄉㄜ ㄌㄜ ㄈㄧ ㄒㄧㄣ', zh: '電視', cat: '日常生活', note: '英文 television，字母直接念即可。' },
+  { ms: 'radio', zy: 'ㄌㄚ ㄉㄧ ㄛ', zh: '收音機', cat: '日常生活', note: '英文 radio，唸法和台灣「拉的歐」一樣。' },
+  { ms: 'telefon', zy: 'ㄉㄝ ㄌㄜ ㄈㄨㄣ', zh: '電話', cat: '日常生活', note: '英文 telephone，台灣人熟悉的「Telephone」。' },
+  { ms: 'komputer', zy: 'ㄎㄛㄇ ㄆㄧㄨ ㄉㄜ', zh: '電腦', cat: '日常生活', note: '英文 computer，台灣人看得懂。' },
+  { ms: 'doktor', zy: 'ㄉㄛㄍ ㄉㄛ', zh: '醫生', cat: '日常生活', note: '英文 doctor。' },
+  { ms: 'hospital', zy: 'ㄏㄛ ㄙ ㄅㄧ ㄉㄜ', zh: '醫院', cat: '日常生活', note: '英文 hospital，路標看一眼就懂。' },
+  { ms: 'farmasi', zy: 'ㄈㄚ ㄇㄚ ㄒㄧ', zh: '藥局', cat: '商業社會', note: '英文 pharmacy，藥局招牌上常見。' },
+  { ms: 'bank', zy: 'ㄅㄥㄎ', zh: '銀行', cat: '商業社會', note: '英文 bank，台灣人說「銀行 bank」。' },
+  { ms: 'kongsi', zy: 'ㄍㄨㄥ ㄒㄧ', zh: '分享／合夥／宗祠', cat: '商業社會', note: '來自閩南語「公司 kong-si」，意思是共有、一起分享，kongsi 也能當動詞。' },
+  { ms: 'angpau', zy: 'ㄤ ㄅㄠ', zh: '紅包', cat: '商業社會', note: '閩南語「紅包 âng-pau」，過年一定要認得。' },
+  { ms: 'samseng', zy: 'ㄙㄢ ㄙㄥ', zh: '流氓', cat: '商業社會', note: '一般認為源自閩南語／粵語的「三牲／三聲」之說，指街頭混混；語源有多種說法，可當作有趣的聯想。' },
+  { ms: 'towkay', zy: 'ㄉㄛ ㄍㄞ', zh: '老闆', cat: '商業社會', note: '閩南語「頭家 thâu-ke」，台灣人天天在用。' },
+  { ms: 'kuaci', zy: 'ㄍㄨㄚ ㄐㄧ', zh: '瓜子', cat: '食物料理', note: '閩南語「瓜子 koe-chí」，過年零食，馬來西亞華人也這樣說。' },
+  { ms: 'pasar', zy: 'ㄅㄚ ㄙㄚ', zh: '市場', cat: '商業社會', note: 'pasar malam 是夜市，台灣人逛夜市的概念完全相同。' },
+  { ms: 'bungkus', zy: 'ㄅㄨㄥ ㄍㄨㄙ', zh: '打包', cat: '商業社會', note: '點餐時說 bungkus 就是「外帶」。' },
+  { ms: 'sambal', zy: 'ㄙㄢ ㄅㄚㄌ', zh: '參峇辣醬', cat: '食物料理', note: '馬來辣醬，椰漿飯的靈魂；台灣辣椒醬愛好者必學。' },
+  { ms: 'satay', zy: 'ㄙㄚ ㄉㄟ', zh: '沙嗲', cat: '食物料理', note: '烤肉串，台灣沙茶醬與它有相似的飲食脈絡。' },
+  { ms: 'kari', zy: 'ㄎㄚ ㄌㄧ', zh: '咖哩', cat: '食物料理', note: '台灣人熟悉的咖哩 curry。' },
+];

@@ -1,0 +1,54 @@
+---
+import '../styles/global.css';
+const { title } = Astro.props;
+const b = import.meta.env.BASE_URL;
+const nav = [['alphabet','1 字母'],['vocab','2 同源詞'],['grammar','3 句型'],['dialogues','4 會話']];
+---
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{title} | 台灣人學馬來文</title>
+  <script is:inline>
+    if (localStorage.getItem('zhuyin') === 'off') document.documentElement.classList.add('zy-off');
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <header class="sticky top-0 z-10 border-b bg-white/90 backdrop-blur">
+    <nav class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2">
+      <a href={b} class="font-bold text-teal-700">🌴 馬來文速通</a>
+      {nav.map(([p, t]) => <a href={`${b}${p}`} class="text-sm hover:text-teal-700">{t}</a>)}
+      <button id="zy-toggle" type="button" class="ml-auto rounded-full border border-teal-600 px-3 py-1 text-sm text-teal-700 hover:bg-teal-50">ㄅ 隱藏注音</button>
+    </nav>
+  </header>
+  <main class="mx-auto max-w-5xl px-4 py-8"><slot /></main>
+  <footer class="py-8 text-center text-sm text-slate-500">Belajar Bahasa Melayu · 為台灣人設計</footer>
+  <script is:inline>
+    (function () {
+      var root = document.documentElement, btn = document.getElementById('zy-toggle');
+      function label() { btn.textContent = root.classList.contains('zy-off') ? 'ㄅ 顯示注音' : 'ㄅ 隱藏注音'; }
+      label();
+      btn.addEventListener('click', function () {
+        root.classList.toggle('zy-off');
+        localStorage.setItem('zhuyin', root.classList.contains('zy-off') ? 'off' : 'on');
+        label();
+      });
+      window.speakMalay = function (t) {
+        if (!('speechSynthesis' in window)) return;
+        var v = speechSynthesis.getVoices(), u = new SpeechSynthesisUtterance(t);
+        var voice = v.find(function (x) { return /^ms/i.test(x.lang); }) || v.find(function (x) { return /^id/i.test(x.lang); });
+        u.lang = voice ? voice.lang : 'ms-MY'; if (voice) u.voice = voice; u.rate = 0.85;
+        speechSynthesis.cancel(); speechSynthesis.speak(u);
+      };
+      if ('speechSynthesis' in window) speechSynthesis.getVoices();
+      document.addEventListener('click', function (e) {
+        var s = e.target.closest('.speak');
+        if (s) { e.stopPropagation(); window.speakMalay(s.dataset.say); return; }
+        var w = e.target.closest('ruby.w');
+        if (w) { w.classList.toggle('show'); window.speakMalay(w.dataset.say); }
+      });
+    })();
+  </script>
+</body>
+</html>

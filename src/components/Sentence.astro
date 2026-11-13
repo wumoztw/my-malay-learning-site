@@ -1,0 +1,9 @@
+---
+import Z from './Z.astro';
+const { words } = Astro.props as { words: [string, string][] };
+const text = words.map((x) => x[0]).join(' ').replace(/ ([?.!])/g, '$1');
+---
+<span class="sentence">{words.map(([w, z], i) => (
+  z === '' ? <>{w}{' '}</> : <><Z w={w} z={z} />{i < words.length - 1 && ' '}</>
+))}</span>
+<button type="button" class="speak ml-1 rounded-full bg-teal-600 px-2 text-sm text-white" data-say={text} aria-label="播放發音">🔊</button>

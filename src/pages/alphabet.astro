@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import Z from '../components/Z.astro';
+import Sentence from '../components/Sentence.astro';
+import { vowels, consonants, finals } from '../data/alphabet';
+const groups = [['母音表', vowels], ['子音表', consonants], ['字尾入聲（促音 k, t, p）與閉唇音 m', finals]] as const;
+---
+<Base title="第一關：26 字母注音速通館">
+  <h1 class="text-3xl font-bold text-teal-800">第一關：26 字母注音速通館</h1>
+  <p class="mt-2 text-slate-600">點擊任一單字即可聽發音；關閉注音時，滑過或輕觸單字可顯示注音。</p>
+  <div class="mt-4 rounded-lg bg-amber-50 p-3 text-sm">
+    ⚠️ <b>e 有兩種發音</b>：弱音 <b>e（ㄜ）</b> 如 <Z w="besar" z="ㄅㄜ ㄙㄚ" />；強音 <b>é（ㄝ）</b> 如 <Z w="enak" z="ㄝ ㄋㄚㄎ" />。
+  </div>
+  {groups.map(([title, list]) => (
+    <section class="mt-8">
+      <h2 class="text-xl font-bold">{title}</h2>
+      <div class="mt-3 grid gap-4 sm:grid-cols-2">
+        {list.map((s) => (
+          <article class="card">
+            <div class="flex items-baseline gap-3">
+              <span class="text-3xl font-bold text-teal-700">{s.k}</span>
+              <span class="text-xl">{s.zy}</span>
+            </div>
+            {s.note && <p class="mt-1 text-sm text-slate-600">{s.note}</p>}
+            <p class="mt-2">代表字：<Z w={s.word[0]} z={s.word[1]} />（{s.zh}）
+              <button type="button" class="speak rounded-full bg-teal-600 px-2 text-sm text-white" data-say={s.word[0]} aria-label="試聽">🔊</button></p>
+            <p class="mt-1">例句：<Sentence words={[...s.ex, ['.', '']]} /> <span class="text-sm text-slate-500">{s.exZh}</span></p>
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>

@@ -3,9 +3,9 @@ import Base from '../layouts/Base.astro';
 import Z from '../components/Z.astro';
 import { vocab, cats } from '../data/vocab';
 ---
-<Base title="第二關：同源詞認親館">
-  <h1 class="text-3xl font-bold text-teal-800">第二關：台語／生活同源詞認親館</h1>
-  <p class="mt-2 text-slate-600">共 {vocab.length} 個單字。點卡片翻面看「台灣人秒懂」解說。</p>
+<Base title="第二關：常用馬來文單字、短句">
+  <h1 class="text-3xl font-bold text-teal-800">第二關：常用馬來文單字、短句</h1>
+  <p class="mt-2 text-slate-600">精選馬來西亞日常生活中最高頻的必備單字與生存短句（共 {vocab.length} 條），支援分類切換、注音即時輔助與點擊發音。點卡片翻面看使用情境。</p>
   <div id="filters" class="mt-4 flex flex-wrap gap-2">
     {['全部', ...cats].map((c) => <button type="button" data-cat={c} class="tile text-sm">{c}</button>)}
   </div>
@@ -22,7 +22,7 @@ import { vocab, cats } from '../data/vocab';
           </div>
           <div class="face back card bg-teal-50">
             <h3 class="font-bold">{v.ms} = {v.zh}</h3>
-            <p class="mt-2 text-sm">🇹🇼 台灣人秒懂：{v.note}</p>
+            <p class="mt-2 text-sm">💡 使用情境：{v.note}</p>
           </div>
         </div>
       </div>

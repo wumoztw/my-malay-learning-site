@@ -4,7 +4,7 @@ import Sentence from '../components/Sentence.astro';
 const b = import.meta.env.BASE_URL;
 const levels = [
   ['alphabet', '第一關', '26 字母注音速通館', '用注音掌握母音、子音與入聲煞車音。'],
-  ['vocab', '第二關', '台語／生活同源詞認親館', '30+ 個你一秒就懂的單字。'],
+  ['vocab', '第二關', '常用馬來文單字、短句', '精選日常最高頻的生活單字與實用生存短句。'],
   ['grammar', '第三關', '積木句型與倒裝挑戰', 'SVO 積木，名詞在前、形容詞在後。'],
   ['dialogues', '第四關', '實戰情境會話館', 'Mamak、搭車、夜市三大場景。'],
 ];
@@ -13,7 +13,7 @@ const daily: [string, string][] = [['Terima', 'ㄉㄜ ㄌㄧ ㄇㄚ'], ['kasih',
 <Base title="首頁">
   <section class="text-center">
     <h1 class="text-3xl font-bold text-teal-800 sm:text-4xl">台灣人學馬來文，比你想的簡單</h1>
-    <p class="mt-3 text-slate-600">用注音輔助、台語同源詞與積木句型，快速開口說 Bahasa Melayu。</p>
+    <p class="mt-3 text-slate-600">用純注音輔助、高頻生活單字與積木句型，快速開口說 Bahasa Melayu。</p>
   </section>
 
   <section class="mt-8 grid gap-4 sm:grid-cols-3">
@@ -23,7 +23,7 @@ const daily: [string, string][] = [['Terima', 'ㄉㄜ ㄌㄧ ㄇㄚ'], ['kasih',
   </section>
 
   <h2 class="mt-10 text-xl font-bold">四大關卡</h2>
-  <p class="text-sm text-slate-500">建議依序學習：先發音 → 認親單字 → 組句 → 實戰對話。</p>
+  <p class="text-sm text-slate-500">建議依序學習：先發音 → 常用字句 → 組句 → 實戰對話。</p>
   <div class="mt-3 grid gap-4 sm:grid-cols-2">
     {levels.map(([p, n, t, d], i) => (
       <a href={`${b}${p}`} class="card block transition hover:border-teal-500 hover:shadow">
@@ -37,6 +37,6 @@ const daily: [string, string][] = [['Terima', 'ㄉㄜ ㄌㄧ ㄇㄚ'], ['kasih',
     <h2 class="text-sm font-bold text-teal-700">今日一句</h2>
     <p class="mt-2 text-2xl"><Sentence words={[...daily, ['!', '']]} /></p>
     <p class="mt-1">謝謝你。</p>
-    <p class="mt-1 text-sm text-slate-600">🗣 台語彩蛋：terima kasih 字面是「接受（terima）愛（kasih）」；台語說「多謝 to-siā」，兩邊都有「心意」的味道，一起記更容易！</p>
+    <p class="mt-1 text-sm text-slate-600">🗣 文化小知識：terima kasih 字面是「接受（terima）愛（kasih）」，把道謝說成收下對方的心意，所以在馬來西亞受人幫忙時，這句話非常受用。</p>
   </section>
 </Base>

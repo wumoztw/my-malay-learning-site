@@ -1,70 +1,69 @@
-# TASK: 建置專為台灣人設計的馬來文學習網站並部署至 GitHub
+# TASK: 重構第二關為「常用馬來文單字、短句」並全面移除台語相關比附
 
 ## 目標
-在 `/home/wuminchin/文件/my-malay-learning-site` 專案中，使用 Astro 或 Vite + React / Vue 搭配 Tailwind CSS，建置具備「全站注音（ㄅㄆㄇㄈ）輔助切換」、「26字母注音速通」、「台語/生活同源詞認親」、「積木句型與倒裝挑戰」、「實戰情境會話」功能的現代化響應式靜態學習網站，並設定 GitHub Actions 自動發布至 GitHub Pages，最後將所有程式碼 commit 並 push 到遠端 repository。
+在 `/home/wuminchin/文件/my-malay-learning-site` 專案中：
+1. 全面移除所有與「台語」、「台語同源詞」相關的描述與不當比附（馬來西亞華人社群使用的是在地化福建話，且許多詞彙並非源於台語）。
+2. 將第二關徹底重構為「常用馬來文單字、短句」（包含問候禮貌、生活問答、餐飲購物、數字時間、高頻核心詞），並搭配精準純注音（ㄅㄆㄇㄈ）標註、實用中文說明與即時發音功能。
+3. 更新全站導覽列、首頁說明文字與首頁每日一句卡片，使命名與文案統一。
+4. 確保 `npm test`（即 `astro build`）零錯誤建置通過，並將修改 commit 與 push 到 GitHub `main` 分支。
 
 ## 可改檔案
-`/home/wuminchin/文件/my-malay-learning-site/` 目錄下的所有新增與修改檔案，包括：
-- `package.json`, `astro.config.mjs` (或 `vite.config.ts`), `tailwind.config.*`, `tsconfig.json`
-- `.github/workflows/deploy.yml`
-- `src/` 內所有組件、頁面、樣式與資料檔案
-- `public/` 靜態資產
+- `src/data/vocab.ts`
+- `src/data/alphabet.ts`
+- `src/pages/vocab.astro`
+- `src/pages/index.astro`
+- `src/layouts/Base.astro`
 - `README.md`
+- `TASK.md`
 
 ## 不可改檔案
 - 專案目錄外的任何檔案嚴禁更動。
-- 不得使用危險命令或破壞 .git 目錄結構。
 
-## 功能與規格細節要求
+## 詳細規格與實作要求
 
-### 1. 全站注音切換開關 (Bopomofo Ruby Toggle)
-- 在 Navigation Bar 放置全域注音開關按鈕（例如 `ㄅ 顯示注音` / `ㄅ 隱藏注音`）。
-- 狀態儲存於 `localStorage`，重新整理或換頁維持狀態。
-- 採用標準 HTML5 `<ruby>` 與 `<rt class="zhuyin">` 標籤實現。
-- 零抖動排版：透過 CSS 預留行高，關閉時 `rt.zhuyin` 設置 `opacity: 0`；當處於關閉狀態時，滑鼠懸停 (hover) 或手機輕觸任一單字，即時淡入顯示注音浮標。
-- 發音支援：點擊單字或發音按鈕時，透過瀏覽器 Web Speech API（優先使用 `ms-MY` 或 `id-ID`）播放道地馬來語音。
+### 1. 常用馬來文單字、短句庫設計 (`src/data/vocab.ts`)
+定義明確分類（如 `'日常問候與禮貌' | '生活問答與疑問' | '餐飲與購物' | '數字與時間' | '高頻實用名詞'`），並整理至少 35~45 條最實用、最高頻的馬來文單字與短句，每條包含：
+- `ms`: 馬來文字詞或短句
+- `zy`: 精準注音符號（如 `Selamat pagi` → `ㄙㄜ ㄌㄚ ㄇㄚ˙  ㄆㄚ ㄍㄧ`）
+- `zh`: 台灣繁體中文翻譯
+- `cat`: 分類名稱
+- `note`: 實用情境指南或文化使用時機（嚴禁提及台語）
 
-### 2. 四大核心單元與頁面
-1. **首頁 (`/`)**：
-   - 網站理念介紹（南島語系發源地連結、台灣人零聲調負擔、SVO 語序優勢）。
-   - 四大關卡導覽卡片、學習進度指引。
-   - 「今日一句」精選詞句展示（含馬來文、注音、中文與台語彩蛋）。
-2. **第一關：26 字母注音速通館 (`/alphabet`)**：
-   - 母音表：a (ㄚ), i (ㄧ), u (ㄨ), o (ㄛ), e (ㄜ), é (ㄝ)。特別標註 e 的兩種發音差異。
-   - 子音表：c (ㄐ/ㄑ), j (ㄐ), ny (ㄋㄧ), ng (ㄥ), sy (ㄒ), r (ㄌ/輕顫)。
-   - 字尾入聲（促音 k, t, p 煞車音 ˙）與閉唇音（m）。
-   - 每個發音均提供代表單字、注音、例句與發音試聽。
-3. **第二關：台語/生活同源詞認親館 (`/vocab`)**：
-   - 收錄 30+ 個台灣人一秒就懂的同源詞（如 mee, bihun, tauhu, taugeh, kuih, kicap, teh, cawan, kopi, tokei, kongsi, loteng, beca, angpau, samseng, bas, teksi, farmasi, hospital, bank 等）。
-   - 提供分類篩選（食物料理、日常生活、商業社會）、單字卡翻牌、發音與詳細「台灣人秒懂文化解說」。
-4. **第三關：積木句型與倒裝挑戰 (`/grammar`)**：
-   - SVO 句型積木展示（時間詞 + 主詞 + 動詞 + 受詞）。
-   - 倒裝練習挑戰（名詞在前、形容詞在後）：如「紅色的車」→ `kereta merah`、「冰茶」→ `teh ais`。
-   - 互動練習題：點擊單字積木正確組裝馬來文句子並獲得即時回饋。
-5. **第四關：實戰情境會話館 (`/dialogues`)**：
-   - 情境 1：Mamak 檔點餐（Roti canai, Teh tarik, Nasi lemak, Kurang manis）。
-   - 情境 2：搭車問路（Pergi ke mana?, Tolong hantar saya ke...）。
-   - 情境 3：夜市買水果算帳（Berapa harga ini?, Boleh murah sikit?）。
-   - 對話氣泡排版，支援單句播放與逐字注音對照。
+精選必備收錄內容：
+- **問候禮貌**：Selamat pagi（早安）、Selamat tengah hari（午安）、Selamat petang（傍晚好）、Selamat malam（晚安）、Apa khabar?（你好嗎？）、Khabar baik（很好/我很好）、Terima kasih（謝謝）、Sama-sama（不客氣）、Maaf（不好意思/抱歉）、Tolong（請/幫忙）、Selamat tinggal（再見/告別）、Selamat jalan（一路平安/慢走）、Jumpa lagi（下次見）。
+- **生活問答**：Di mana tandas?（洗手間在哪裡？）、Berapa harganya?（這個多少錢？）、Apa ini?（這是什麼？）、Boleh tolong saya?（能幫我一下嗎？）、Saya tidak faham（我聽不懂）、Boleh cakap perlahan sikit?（可以講慢一點嗎？）、Ya / Tidak (Tak)（是/不是）、Di mana...?（...在哪裡？）。
+- **餐飲購物**：Air（水）、Makanan（食物）、Minuman（飲料）、Nasi（飯）、Mee（麵）、Ais（冰）、Kurang manis（少糖/微甜）、Bungkus（打包/外帶）、Makan sini（內用）、Boleh murah sikit?（可以算便宜一點嗎？）、Kira（算帳/買單）。
+- **數字時間**：Satu 到 Sepuluh（1 到 10）、Hari ini（今天）、Esok（明天）、Sekarang（現在）、Pagi（早上）、Malam（晚上）。
+- **高頻名詞/代詞**：Saya（我）、Awak / Anda（你）、Dia（他/她）、Kita（我們）、Wang / Duit（錢）、Stesen（車站）、Hotel（飯店）、Lapangan terbang（機場）、Kedai（商店）、Pasar malam（夜市）。
 
-### 3. GitHub Pages 設定與 CI/CD
-- 在配置檔中設定 `base: '/my-malay-learning-site/'`（確保在 GitHub Pages `https://wumoztw.github.io/my-malay-learning-site/` 上的資源路徑、路由與 CSS/JS 正常加載）。
-- 建立 `.github/workflows/deploy.yml`，使用 GitHub Actions 官方推薦的 pages 部署流程 (`actions/deploy-pages`)。
-- 專案打包指令 `npm run build` 必須零錯誤通過，產出 `dist` 靜態目錄。
+### 2. 更新第二關頁面 (`src/pages/vocab.astro`)
+- 頁面標題改為：`第二關：常用馬來文單字、短句`。
+- 副標題與說明文字強調：精選馬來西亞日常生活中最高頻的必備單字與生存短句，支援分類切換、注音即時輔助與點擊發音。
+- 分類標籤按鈕支援全部分類快速切換篩選。
 
-### 4. Git 提交與發布
-- 將所有新增與修改的檔案執行 `git add .`。
-- 執行 `git commit -m "feat: complete Taiwan-Malay learning website with Bopomofo integration"`。
-- 執行 `git push origin main` 將程式碼推送至 GitHub 遠端倉庫。
+### 3. 全面清理全站的台語相關文字
+- `src/layouts/Base.astro`：導覽列改為 `['vocab', '2 常用字句']`（或 `['vocab', '2 常用單字']`）。
+- `src/pages/index.astro`：
+  - 卡片導覽由「台語／生活同源詞認親館」改為 `['vocab', '第二關', '常用馬來文單字、短句', '精選日常最高頻的生活單字與實用生存短句。']`。
+  - 首頁介紹文案改為：「用純注音輔助、高頻生活單字與積木句型，快速開口說 Bahasa Melayu。」
+  - 「今日一句」中移除任何台語彩蛋說明，替換為優雅的馬來文文化小知識（例如 Terima kasih 的字面含義為「接受愛」）。
+- `src/data/alphabet.ts`：
+  - 移除以台語作為入聲或鼻音的舉例，改用標準清晰的發音描述（例如：字尾 k 喉嚨收緊不送氣、字尾 m 閉唇收音、ny 舌面鼻音快速滑過）。
+- `README.md`：同步更新章節標題與描述。
+
+### 4. 驗證與推送
+- 執行 `npm test`（或 `npm run build`），必須零錯誤建置成功並產出 5 個靜態頁面。
+- 執行 `git add .`、`git commit -m "refactor: replace cognates with high-frequency everyday Malay words and phrases"`。
+- 執行 `git push origin main` 將最新代碼推送至 GitHub。
 
 ## 完成條件
-1. `npm run build` 執行成功且無任何 build error，正確產出靜態網站。
-2. 專案根目錄包含完整的 `.github/workflows/deploy.yml`。
-3. 本地 git 倉庫狀態乾淨 (`git status` 無未追蹤或未提交之變更)，且已成功 push 至 GitHub `main` 分支。
-4. 網頁包含完整的注音切換邏輯與四個模組功能。
+1. 全站代碼（包含資料檔、組件與頁面文案）中不再出現「台語」等不精確比附。
+2. 第二關完整展示「常用馬來文單字、短句」，包含問候、疑問、餐飲購物、數字時間與高頻詞彙。
+3. `npm test` 通過，無 build 錯誤。
+4. 本地 git 狀態乾淨，並已成功 push 至 GitHub `main` 分支。
 
 ## 驗證指令
-- `npm run build`
+- `npm test`
 - `git status`
 - `git log -1`
 - `git push origin main`

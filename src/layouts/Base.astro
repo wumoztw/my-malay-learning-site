@@ -2,7 +2,7 @@
 import '../styles/global.css';
 const { title } = Astro.props;
 const b = import.meta.env.BASE_URL;
-const nav = [['alphabet','1 字母'],['vocab','2 常用字句'],['grammar','3 句型'],['dialogues','4 會話']];
+const nav = [['alphabet','1 字母'],['vocab','2 常用字句'],['grammar','3 句型'],['dialogues','4 會話'],['favorites','⭐ 收藏']];
 ---
 <!doctype html>
 <html lang="zh-Hant">
@@ -41,6 +41,43 @@ const nav = [['alphabet','1 字母'],['vocab','2 常用字句'],['grammar','3 �
         localStorage.setItem('zhuyin', root.classList.contains('zy-off') ? 'off' : 'on');
         label();
       });
+      var FK = 'my_malay_favs';
+      function readFavs() {
+        try { var a = JSON.parse(localStorage.getItem(FK) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+      }
+      function saveFavs(a) {
+        try { localStorage.setItem(FK, JSON.stringify(a)); } catch (e) {}
+        window.dispatchEvent(new CustomEvent('fav_change'));
+      }
+      window.favStore = {
+        get: readFavs,
+        has: function (id) { return readFavs().some(function (x) { return x.id === id; }); },
+        toggle: function (item) {
+          var a = readFavs(), i = a.findIndex(function (x) { return x.id === item.id; }), on = i < 0;
+          if (on) a.push(item); else a.splice(i, 1);
+          saveFavs(a); return on;
+        },
+        clear: function () { saveFavs([]); }
+      };
+      window.addEventListener('storage', function (e) { if (e.key === FK) window.dispatchEvent(new CustomEvent('fav_change')); });
+      document.addEventListener('click', function (e) {
+        var f = e.target.closest('.fav-star');
+        if (!f) return;
+        e.stopPropagation();
+        if (f.dataset.favRemove !== undefined || !f.dataset.item) return;
+        window.favStore.toggle(JSON.parse(f.dataset.item));
+      });
+      function syncStars() {
+        document.querySelectorAll('.fav-star[data-id]').forEach(function (b) {
+          var on = window.favStore.has(b.dataset.id);
+          b.textContent = on ? '⭐' : '☆';
+          b.classList.toggle('text-amber-500', on);
+          b.classList.toggle('text-slate-400', !on);
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+      }
+      window.addEventListener('fav_change', syncStars);
+      syncStars();
       window.speakMalay = function (t) {
         if (!('speechSynthesis' in window)) return;
         var v = speechSynthesis.getVoices(), u = new SpeechSynthesisUtterance(t);

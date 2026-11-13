@@ -23,6 +23,29 @@ const daily: [string, string][] = [['Terima', 'ㄉㄜ ㄌㄧ ㄇㄚ'], ['kasih',
     <div class="card"><h2 class="font-bold">🧱 SVO 語序</h2><p class="mt-1 text-sm">主詞＋動詞＋受詞，和中文一樣！只有名詞與形容詞的順序要倒過來。</p></div>
   </section>
 
+  <section class="card mt-8 border-amber-300 bg-amber-50">
+    <div class="flex items-center justify-between gap-2">
+      <h2 class="font-bold text-amber-800">⭐ 我的旅遊備忘快查</h2>
+      <a id="home-fav-all" href={`${b}favorites`} hidden class="text-sm text-amber-800 underline">查看全部 (0) →</a>
+    </div>
+    <p id="home-fav-tip" class="mt-2 text-sm text-slate-600">小教學：在「常用字句」或「實戰會話」點擊 ☆，就能把救急句釘選在這裡，機場、餐廳一秒叫出！</p>
+    <ul id="home-fav-list" class="mt-2 space-y-2"></ul>
+  </section>
+  <script>
+    const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+    function renderHomeFavs() {
+      const items: { ms: string; zh: string }[] = (window as any).favStore.get();
+      document.getElementById('home-fav-tip')!.hidden = items.length > 0;
+      const all = document.getElementById('home-fav-all')!;
+      all.hidden = items.length === 0;
+      all.textContent = `查看全部 (${items.length}) →`;
+      document.getElementById('home-fav-list')!.innerHTML = items.slice(0, 5).map((f) =>
+        `<li class="flex items-center gap-2"><button type="button" class="speak rounded-full bg-teal-600 px-2 text-sm text-white" data-say="${esc(f.ms)}" aria-label="播放發音">🔊</button><span class="font-bold">${esc(f.ms)}</span><span class="text-sm text-slate-600">${esc(f.zh)}</span></li>`).join('');
+    }
+    window.addEventListener('fav_change', renderHomeFavs);
+    renderHomeFavs();
+  </script>
+
   <h2 class="mt-10 text-xl font-bold">四大關卡</h2>
   <p class="text-sm text-slate-500">建議依序學習：先發音 → 常用字句 → 組句 → 實戰對話。</p>
   <div class="mt-3 grid gap-4 sm:grid-cols-2">

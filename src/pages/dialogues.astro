@@ -15,15 +15,21 @@ import { scenes } from '../data/dialogues';
     <section class="mt-8 scroll-mt-16" id={s.id}>
       <h2 class="text-xl font-bold">{s.title}</h2>
       <div class="mt-3 space-y-3">
-        {s.lines.map((l) => (
+        {s.lines.map((l) => {
+          const text = l.ms.map((x) => x[0]).join(' ').replace(/ ([?.!])/g, '$1');
+          const zy = l.ms.map((x) => x[1]).filter(Boolean).join(' ');
+          const item = JSON.stringify({ id: text, ms: text, zy, zh: l.zh, cat: s.nav, type: 'dialogue' });
+          return (
           <div class={`flex ${l.who === 'B' ? 'justify-end' : ''}`}>
             <div class={`max-w-[90%] rounded-2xl px-4 py-2 shadow-sm ${l.who === 'B' ? 'bg-teal-100' : 'bg-white'}`}>
               <div class="text-xs text-slate-500">{s.roles[l.who === 'A' ? 0 : 1]}</div>
               <Sentence words={l.ms} />
+              <button type="button" class="fav-star ml-1 text-lg text-slate-400" aria-label="收藏此句" data-id={text} data-item={item}>☆</button>
               <div class="text-sm text-slate-600">{l.zh}</div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   ))}

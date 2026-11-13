@@ -10,3 +10,6 @@ Astro + Tailwind CSS 靜態學習網站，含全站注音切換、字母速通�
 ## 離線 PWA
 
 支援 Add to Home Screen 與離線使用：`public/sw.js`（Stale-While-Revalidate，快取 `malay-learning-pwa-v1`）、`public/manifest.webmanifest`、`public/icon*.{svg,png}`。
+
+## ⭐ 星號收藏
+在「常用字句」與「實戰會話」點擊 ☆ 即可收藏，資料存於 `localStorage`（key: `my_malay_favs`）。收藏清單頁 `/favorites/` 支援發音、複製文字清單與清空；首頁有「旅遊備忘快查」，並已加入離線快取。

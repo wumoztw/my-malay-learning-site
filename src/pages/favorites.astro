@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro';
+const b = import.meta.env.BASE_URL;
+---
+<Base title="我的收藏">
+  <h1 id="fav-title" class="text-3xl font-bold text-teal-800">⭐ 我的出國備忘錦囊（共 0 條）</h1>
+  <div id="fav-tools" hidden class="mt-4 flex flex-wrap gap-2">
+    <button id="fav-copy" type="button" class="tile text-sm">📋 一鍵複製文字清單</button>
+    <button id="fav-clear" type="button" class="tile text-sm">🗑️ 清空收藏</button>
+    <span id="fav-msg" class="self-center text-sm text-teal-700"></span>
+  </div>
+  <div id="fav-empty" hidden class="card mt-6 text-center">
+    <p class="text-5xl">🌟</p>
+    <p class="mt-3 text-slate-600">目前還沒有收藏任何字句。在單字庫或情境對話中點擊 ⭐，即可將出國必備的救急句釘選在此！</p>
+    <a href={`${b}vocab`} class="mt-4 inline-block rounded-full bg-teal-600 px-4 py-2 text-white">前往探索單字</a>
+  </div>
+  <ul id="fav-list" class="mt-6 space-y-3"></ul>
+  <script>
+    interface Fav { id: string; ms: string; zy?: string; zh: string; cat?: string; type: string }
+    const store = () => (window as any).favStore;
+    const list = document.getElementById('fav-list')!;
+    const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+    function render() {
+      const items: Fav[] = store().get();
+      document.getElementById('fav-title')!.textContent = `⭐ 我的出國備忘錦囊（共 ${items.length} 條）`;
+      document.getElementById('fav-empty')!.hidden = items.length > 0;
+      document.getElementById('fav-tools')!.hidden = items.length === 0;
+      list.innerHTML = items.map((f, i) => `
+        <li class="card flex items-center gap-3">
+          <div class="min-w-0 flex-1">
+            ${f.cat ? `<span class="rounded-full bg-teal-50 px-2 py-0.5 text-xs text-teal-700">${esc(f.cat)}</span>` : ''}
+            <div class="mt-1 text-xl font-bold">${f.zy
+              ? `<ruby class="w" data-say="${esc(f.ms)}" tabindex="0">${esc(f.ms)}<rp>(</rp><rt class="zhuyin">${esc(f.zy)}</rt><rp>)</rp></ruby>`
+              : esc(f.ms)}</div>
+            <div class="text-slate-600">${esc(f.zh)}</div>
+          </div>
+          <button type="button" class="speak rounded-full bg-teal-600 px-3 py-1 text-sm text-white" data-say="${esc(f.ms)}" aria-label="播放發音">🔊</button>
+          <button type="button" class="fav-rm text-xl text-amber-500" data-i="${i}" aria-label="移除收藏">⭐</button>
+        </li>`).join('');
+    }
+    list.addEventListener('click', (e) => {
+      const rm = (e.target as HTMLElement).closest<HTMLElement>('.fav-rm');
+      if (!rm) return;
+      const f = store().get()[Number(rm.dataset.i)];
+      if (f) store().toggle(f);
+    });
+    const msg = (t: string) => {
+      const m = document.getElementById('fav-msg')!;
+      m.textContent = t;
+      setTimeout(() => (m.textContent = ''), 2000);
+    };
+    document.getElementById('fav-copy')!.addEventListener('click', async () => {
+      const text = store().get().map((f: Fav) => `${f.ms}${f.zy ? `（${f.zy}）` : ''} — ${f.zh}`).join('\n');
+      try {
+        await navigator.clipboard.writeText(text);
+        msg('已複製！');
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        msg('已複製！');
+      }
+    });
+    document.getElementById('fav-clear')!.addEventListener('click', () => {
+      if (confirm('確定要清空全部收藏嗎？此動作無法復原。')) store().clear();
+    });
+    window.addEventListener('fav_change', render);
+    render();
+  </script>
+</Base>

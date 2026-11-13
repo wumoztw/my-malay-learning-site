@@ -9,12 +9,15 @@ import { vocab, cats } from '../data/vocab';
   <p class="mt-3 inline-block rounded-full bg-amber-100 px-4 py-1 text-sm font-semibold text-amber-800">🛫 旅遊通模式：收錄 {vocab.length}+ 條大馬自由行必備字句</p>
   <div id="filters" class="mt-4 flex flex-wrap gap-2">
     {['全部', ...cats].map((c) => <button type="button" data-cat={c} class="tile text-sm">{c}</button>)}
+    <button type="button" data-cat="__fav" class="tile text-sm">⭐ 只看已收藏</button>
   </div>
+  <p id="fav-empty" hidden class="mt-4 text-slate-500">目前還沒有收藏任何單字。點卡片右上角的 ☆ 即可加入收藏。</p>
   <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     {vocab.map((v) => (
       <div class="flip" data-cat={v.cat} role="button" tabindex="0" aria-label={`翻牌 ${v.ms}`}>
         <div class="flip-inner">
-          <div class="face card flex flex-col items-center justify-center text-center">
+          <div class="face card relative flex flex-col items-center justify-center text-center">
+            <button type="button" class="fav-star absolute right-2 top-2 text-lg text-slate-400" aria-label="收藏" data-id={v.ms} data-item={JSON.stringify({ id: v.ms, ms: v.ms, zy: v.zy, zh: v.zh, cat: v.cat, type: 'vocab' })}>☆</button>
             <span class="text-xs text-teal-600">{v.cat}</span>
             <span class="mt-2 text-3xl font-bold"><Z w={v.ms} z={v.zy} /></span>
             <span class="mt-2 text-lg">{v.zh}</span>
@@ -31,16 +34,27 @@ import { vocab, cats } from '../data/vocab';
   </div>
   <script>
     const cards = document.querySelectorAll<HTMLElement>('.flip');
+    const empty = document.getElementById('fav-empty')!;
+    let cat = '全部';
+    const favs = () => (window as any).favStore;
+    const apply = () => {
+      let shown = 0;
+      cards.forEach((c) => {
+        const id = c.querySelector<HTMLElement>('.fav-star')!.dataset.id!;
+        const ok = cat === '全部' || (cat === '__fav' ? favs().has(id) : c.dataset.cat === cat);
+        c.style.display = ok ? '' : 'none';
+        if (ok) shown++;
+      });
+      empty.hidden = !(cat === '__fav' && shown === 0);
+    };
     cards.forEach((c) => {
       const toggle = () => c.classList.toggle('on');
-      c.addEventListener('click', (e) => { if (!(e.target as HTMLElement).closest('.speak')) toggle(); });
-      c.addEventListener('keydown', (e) => { if (e.key === 'Enter') toggle(); });
+      c.addEventListener('click', (e) => { if (!(e.target as HTMLElement).closest('.speak, .fav-star')) toggle(); });
+      c.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target === c) toggle(); });
     });
     document.querySelectorAll<HTMLElement>('#filters button').forEach((btn) =>
-      btn.addEventListener('click', () => {
-        const cat = btn.dataset.cat;
-        cards.forEach((c) => (c.style.display = cat === '全部' || c.dataset.cat === cat ? '' : 'none'));
-      }),
+      btn.addEventListener('click', () => { cat = btn.dataset.cat!; apply(); }),
     );
+    window.addEventListener('fav_change', () => { if (cat === '__fav') apply(); });
   </script>
 </Base>

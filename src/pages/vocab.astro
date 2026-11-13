@@ -6,6 +6,7 @@ import { vocab, cats } from '../data/vocab';
 <Base title="第二關：常用馬來文單字、短句">
   <h1 class="text-3xl font-bold text-teal-800">第二關：常用馬來文單字、短句</h1>
   <p class="mt-2 text-slate-600">精選馬來西亞日常生活中最高頻的必備單字與生存短句（共 {vocab.length} 條），支援分類切換、注音即時輔助與點擊發音。點卡片翻面看使用情境。</p>
+  <p class="mt-3 inline-block rounded-full bg-amber-100 px-4 py-1 text-sm font-semibold text-amber-800">🛫 旅遊通模式：收錄 {vocab.length}+ 條大馬自由行必備字句</p>
   <div id="filters" class="mt-4 flex flex-wrap gap-2">
     {['全部', ...cats].map((c) => <button type="button" data-cat={c} class="tile text-sm">{c}</button>)}
   </div>
